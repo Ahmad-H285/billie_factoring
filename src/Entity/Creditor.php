@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CreditorRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,6 +33,16 @@ class Creditor
      * @ORM\Column(type="integer", nullable=true)
      */
     private $debtorLimit;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="creditor", orphanRemoval=true)
+     */
+    private $invoices;
+
+    public function __construct()
+    {
+        $this->invoices = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -69,6 +81,35 @@ class Creditor
     public function setDebtorLimit(?int $debtorLimit): self
     {
         $this->debtorLimit = $debtorLimit;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Invoice[]
+     */
+    public function getInvoices(): Collection
+    {
+        return $this->invoices;
+    }
+
+    public function addInvoice(Invoice $invoice): self
+    {
+        if (!$this->invoices->contains($invoice)) {
+            $this->invoices[] = $invoice;
+            $invoice->setCreditor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvoice(Invoice $invoice): self
+    {
+        if ($this->invoices->removeElement($invoice)) {
+            if ($invoice->getCreditor() === $this) {
+                $invoice->setCreditor(null);
+            }
+        }
 
         return $this;
     }
