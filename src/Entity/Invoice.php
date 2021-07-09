@@ -181,7 +181,7 @@ class Invoice
         return $this;
     }
 
-    public function getPaid(): ?bool
+    public function isPaid(): ?bool
     {
         return $this->paid;
     }
