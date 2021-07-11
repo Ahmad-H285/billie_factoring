@@ -89,6 +89,38 @@ class InvoiceController extends AbstractController
         ], HttpStatusCode::SUCCESS);
     }
 
+
+    /**
+     * @Route("api/v1/invoice/pay", name="invoice_pay", methods="POST")
+     *
+     * @param Request                $request
+     * @param EntityManagerInterface $em
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function pay(Request $request, EntityManagerInterface $em): Response
+    {
+        $invoiceReference = $request->get('referenceNo');
+
+        if(!$invoiceReference) {
+            return $this->json([
+                'message' => 'Please provide invoice reference number'
+            ], HttpStatusCode::BAD_REQUEST);
+        }
+
+        $payInvoice = $this->payInvoice($invoiceReference, $em);
+
+        if(!$payInvoice) {
+            return $this->json([
+                'message' => 'No invoice found with this reference number',
+            ], HttpStatusCode::NOT_FOUND);
+        }
+
+        return $this->json([
+            'message' => 'Invoice paid successfully',
+        ], HttpStatusCode::SUCCESS);
+    }
+
     /**
      * @param Request $request
      *
@@ -164,5 +196,26 @@ class InvoiceController extends AbstractController
 
         $em->persist($invoice);
         $em->flush();
+    }
+
+    /**
+     * @param string                 $invoiceNumber
+     * @param EntityManagerInterface $em
+     *
+     * @return bool
+     */
+    private function payInvoice(string $invoiceNumber, EntityManagerInterface $em)
+    {
+        $invoice = $this->invoiceRepository->findOneBy(['reference' => $invoiceNumber]);
+        
+        if(!$invoice) {
+            return false;
+        }
+
+        $invoice->setPaid(true);
+        $em->persist($invoice);
+        $em->flush();
+
+        return true;
     }
 }
