@@ -1,0 +1,21 @@
+
+**** Simple steps for installing the project ****
+
+1- Clone the project from this repo: https://github.com/Ahmad-H285/billie_factoring
+2- Run composer install
+3- Configure database from .env file.
+4- Run migrations.
+5- See the api docs through Swagger link: {your-local-server}/api/doc
+
+And that's it.
+
+NOTE: This api design is standardized from TMForum for standard api designs suitable for this business model.
+
+
+**** Next Step ****
+
+1- Will use message queue for notifying customers for invoice payments before a specified time.
+2- Use design patterns for creating an invoice template for each creditor/company.
+3- Add OAuth2 authentication for apis in payments apis.
+4- Add detailed payment gateways log storing all transactions details.
+5- Separating creditors creation and payment actions in services for later usage.
