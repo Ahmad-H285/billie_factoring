@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Swagger\Annotations as SWG;
 
 class InvoiceController extends AbstractController
 {
@@ -63,6 +64,67 @@ class InvoiceController extends AbstractController
     /**
      * @Route("api/v1/invoice/add", name="invoice_add", methods="POST")
      *
+     * @SWG\Parameter(
+     *     name="creditorCode",
+     *     in="query",
+     *     type="string",
+     *     description="This is the creditor's code"
+     * )
+     *
+     * @SWG\Parameter(
+     *     name="reference",
+     *     in="query",
+     *     type="string",
+     *     description="This is the invoice reference number"
+     * )
+     *
+     * @SWG\Parameter(
+     *     name="totalCost",
+     *     in="query",
+     *     type="number",
+     *     description="items total cost"
+     * )
+     *
+     * @SWG\Parameter(
+     *     name="totalQuantity",
+     *     in="query",
+     *     type="integer",
+     *     description="items total quatity"
+     * )
+     *
+     * @SWG\Parameter(
+     *     name="maxPaymentDays",
+     *     in="query",
+     *     type="integer",
+     *     description="Max number of days that the invoice should be paid through"
+     * )
+     *
+     * @SWG\Parameter(
+     *     name="debtorPhone",
+     *     in="query",
+     *     type="string",
+     *     description="Debtor's phone number"
+     * )
+     *
+     * @SWG\Parameter(
+     *     name="debtorEmail",
+     *     in="query",
+     *     type="string",
+     *     description="Debtor's email"
+     * )
+     *
+     * @SWG\Parameter(
+     *     name="maxPaymentDays",
+     *     in="query",
+     *     type="string",
+     *     description="Max number of days that the invoice should be paid through"
+     * )
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Invoice added successfully",
+     * )
+     *
      * @param Request                $request
      * @param EntityManagerInterface $em
      *
@@ -92,6 +154,18 @@ class InvoiceController extends AbstractController
 
     /**
      * @Route("api/v1/invoice/pay", name="invoice_pay", methods="POST")
+     *
+     * @SWG\Parameter(
+     *     name="referenceNo",
+     *     in="query",
+     *     type="string",
+     *     description="Invoice reference number"
+     * )
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Invoice paid successfully",
+     * )
      *
      * @param Request                $request
      * @param EntityManagerInterface $em
@@ -207,7 +281,7 @@ class InvoiceController extends AbstractController
     private function payInvoice(string $invoiceNumber, EntityManagerInterface $em)
     {
         $invoice = $this->invoiceRepository->findOneBy(['reference' => $invoiceNumber]);
-        
+
         if(!$invoice) {
             return false;
         }

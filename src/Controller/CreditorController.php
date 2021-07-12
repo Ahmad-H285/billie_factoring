@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Swagger\Annotations as SWG;
 
 class CreditorController extends AbstractController
 {
@@ -51,6 +52,31 @@ class CreditorController extends AbstractController
 
     /**
      * @Route("api/v1/creditor/add", name="creditor_add", methods="POST")
+     * @SWG\Parameter(
+     *     name="code",
+     *     in="query",
+     *     type="string",
+     *     description="This is the creditor's code field"
+     * )
+     *
+     * @SWG\Parameter(
+     *     name="name",
+     *     in="query",
+     *     type="string",
+     *     description="This is the creditor's name field"
+     * )
+     *
+     * @SWG\Parameter(
+     *     name="debtorLimit",
+     *     in="query",
+     *     type="string",
+     *     description="This is the debtor limit of faild payments field"
+     * )
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Creditor added successfully",
+     * )
      *
      * @param Request                $request
      * @param EntityManagerInterface $em
